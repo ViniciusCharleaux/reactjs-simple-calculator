@@ -2,13 +2,16 @@ import {
   ReactNode,
   createContext,
   useContext,
-  useEffect,
+  useState,
   useCallback,
+  useEffect,
 } from 'react'
 
 interface CalcContextData {
-  alertTest: () => void
-  saco: () => void
+  display: string
+  history: string
+  setNumber: (value: string) => void
+  setOperator: (value: string) => void
 }
 
 interface CalcProviderData {
@@ -18,23 +21,36 @@ interface CalcProviderData {
 const CalcContext = createContext<CalcContextData>({} as CalcContextData)
 
 const CalcProvider = ({ children }: CalcProviderData) => {
-  useEffect(() => {
-    console.log('a')
+  const [display, setDisplay] = useState('')
+  const [history, setHistory] = useState('')
+  const [isOperator, setIsOperator] = useState(false)
+
+  const setNumber = useCallback((value: string) => {
+    setDisplay((prev) => prev + value)
+    setHistory((prev) => prev + value)
+    setIsOperator(false)
   }, [])
 
-  const alertTest = useCallback(() => {
-    console.log('ia')
-  }, [])
-
-  const saco = useCallback(() => {
-    console.log('ia')
-  }, [])
+  const setOperator = useCallback(
+    (value: string) => {
+      if (!(history.length === 0)) {
+        if (!isOperator) {
+          setDisplay((prev) => prev + value)
+          setHistory((prev) => prev + value)
+          setIsOperator(true)
+        }
+      }
+    },
+    [isOperator, history],
+  )
 
   return (
     <CalcContext.Provider
       value={{
-        alertTest,
-        saco,
+        display,
+        history,
+        setNumber,
+        setOperator,
       }}
     >
       {children}
