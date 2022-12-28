@@ -1,3 +1,4 @@
+/* eslint-disable no-eval */
 import {
   ReactNode,
   createContext,
@@ -8,10 +9,10 @@ import {
 } from 'react'
 
 interface CalcContextData {
-  display: string
+  output: string
   history: string
-  setNumber: (value: string) => void
-  setOperator: (value: string) => void
+  updateCalc: (value: string) => void
+  calculate: () => void
 }
 
 interface CalcProviderData {
@@ -21,36 +22,28 @@ interface CalcProviderData {
 const CalcContext = createContext<CalcContextData>({} as CalcContextData)
 
 const CalcProvider = ({ children }: CalcProviderData) => {
-  const [display, setDisplay] = useState('')
+  const [output, setOutput] = useState('')
   const [history, setHistory] = useState('')
-  const [isOperator, setIsOperator] = useState(false)
+  const [total, setTotal] = useState()
 
-  const setNumber = useCallback((value: string) => {
-    setDisplay((prev) => prev + value)
+  const updateCalc = useCallback((value: string) => {
+    setOutput((prev) => prev + value)
     setHistory((prev) => prev + value)
-    setIsOperator(false)
   }, [])
 
-  const setOperator = useCallback(
-    (value: string) => {
-      if (!(history.length === 0)) {
-        if (!isOperator) {
-          setDisplay((prev) => prev + value)
-          setHistory((prev) => prev + value)
-          setIsOperator(true)
-        }
-      }
-    },
-    [isOperator, history],
-  )
+  const calculate = useCallback(() => {
+    const final = eval(output)
+
+    setOutput(final)
+  }, [output])
 
   return (
     <CalcContext.Provider
       value={{
-        display,
+        output,
         history,
-        setNumber,
-        setOperator,
+        updateCalc,
+        calculate,
       }}
     >
       {children}
