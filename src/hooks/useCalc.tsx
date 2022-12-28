@@ -5,7 +5,6 @@ import {
   useContext,
   useState,
   useCallback,
-  useEffect,
 } from 'react'
 
 interface CalcContextData {
@@ -24,12 +23,27 @@ const CalcContext = createContext<CalcContextData>({} as CalcContextData)
 const CalcProvider = ({ children }: CalcProviderData) => {
   const [output, setOutput] = useState('')
   const [history, setHistory] = useState('')
-  const [total, setTotal] = useState()
+  const [isPoint, setIsPoint] = useState(false)
 
-  const updateCalc = useCallback((value: string) => {
-    setOutput((prev) => prev + value)
-    setHistory((prev) => prev + value)
-  }, [])
+  const updateCalc = useCallback(
+    (value: string) => {
+      if (value === '.' && isPoint === false) {
+        console.log(isPoint)
+        console.log('1')
+
+        setOutput((prev) => prev + value)
+        setHistory((prev) => prev + value)
+        setIsPoint(true)
+      } else if (value !== '.') {
+        console.log('2')
+
+        setIsPoint(false)
+        setOutput((prev) => prev + value)
+        setHistory((prev) => prev + value)
+      }
+    },
+    [isPoint],
+  )
 
   const calculate = useCallback(() => {
     const final = eval(output)

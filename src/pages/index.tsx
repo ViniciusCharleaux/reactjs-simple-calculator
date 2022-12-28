@@ -8,10 +8,14 @@ export const Index: React.FC = () => {
   return (
     <div className="flex bg-gray-800 h-screen w-screen items-center justify-center flex-col">
       <div className="flex w-96 h-max text-right justify-end flex-col">
-        <div className="flex bg-white h-20 p-6 text-right justify-end text-3xl overflow-hidden">
+        <div
+          className={`flex bg-white h-20 p-6 text-right justify-end overflow-hidden ${
+            history.length > 20 ? 'text-xl' : 'text-3xl'
+          }`}
+        >
           {history}
         </div>
-        <div className="flex bg-white h-12 py-4 px-6 text-right justify-end">
+        <div className="flex bg-white h-12 py-4 px-6 text-right justify-end overflow-hidden">
           {output}
         </div>
         <div className="flex flex-wrap items-center">
