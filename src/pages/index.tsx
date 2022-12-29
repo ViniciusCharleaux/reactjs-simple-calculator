@@ -1,24 +1,20 @@
 import React from 'react'
-import { Button } from '../components/button'
 import { useCalc } from '../hooks/useCalc'
+import { Button, Screen, TopButton } from '../components'
 
 export const Index: React.FC = () => {
-  const { output, history, updateCalc, calculate } = useCalc()
+  const { updateCalc, calculate, reset, backSpace } = useCalc()
 
   return (
     <div className="flex bg-gray-800 h-screen w-screen items-center justify-center flex-col">
       <div className="flex w-96 h-max text-right justify-end flex-col">
-        <div
-          className={`flex bg-white h-20 p-6 text-right justify-end overflow-hidden ${
-            history.length > 20 ? 'text-xl' : 'text-3xl'
-          }`}
-        >
-          {history}
-        </div>
-        <div className="flex bg-white h-12 py-4 px-6 text-right justify-end overflow-hidden">
-          {output}
-        </div>
+        <Screen />
         <div className="flex flex-wrap items-center">
+          <div className="flex flex-row h-auto w-full">
+            <TopButton onClick={reset} title="C" />
+            <TopButton onClick={backSpace} title="<-" />
+          </div>
+
           <Button onClick={() => updateCalc('7')} title="7" />
           <Button onClick={() => updateCalc('8')} title="8" />
           <Button onClick={() => updateCalc('9')} title="9" />
@@ -34,7 +30,7 @@ export const Index: React.FC = () => {
           <Button onClick={() => updateCalc('3')} title="3" />
           <Button onClick={() => updateCalc('+')} title="+" />
 
-          <Button onClick={() => {}} title="C" />
+          <Button onClick={() => updateCalc('/')} title="/" />
           <Button onClick={() => updateCalc('0')} title="0" />
           <Button onClick={() => updateCalc('.')} title="," />
           <Button onClick={calculate} title="=" />

@@ -12,6 +12,8 @@ interface CalcContextData {
   history: string
   updateCalc: (value: string) => void
   calculate: () => void
+  reset: () => void
+  backSpace: () => void
 }
 
 interface CalcProviderData {
@@ -24,32 +26,65 @@ const CalcProvider = ({ children }: CalcProviderData) => {
   const [output, setOutput] = useState('')
   const [history, setHistory] = useState('')
   const [isPoint, setIsPoint] = useState(false)
+  const [isOp, setIsOp] = useState(false)
+
+  const reset = useCallback(() => {
+    setOutput('')
+    setHistory('')
+    setIsPoint(false)
+  }, [])
+
+  const calculate = useCallback(() => {
+    const final = eval(
+      output.substring(0, isOp ? output.length - 1 : output.length),
+    )
+
+    setHistory(final)
+    setOutput(final)
+  }, [output])
 
   const updateCalc = useCallback(
     (value: string) => {
-      if (value === '.' && isPoint === false) {
-        console.log(isPoint)
-        console.log('1')
+      const operators = ['*', '/', '-', '+']
 
-        setOutput((prev) => prev + value)
-        setHistory((prev) => prev + value)
-        setIsPoint(true)
-      } else if (value !== '.') {
-        console.log('2')
+      if (operators.includes(value)) {
+        if (history.length === 0 && (value === '/' || value === '*')) {
+          setOutput((prev) => prev + '')
+          setHistory((prev) => prev + '')
+        } else {
+          if (!isOp) {
+            setIsOp(true)
+            setIsPoint(false)
+            setHistory((prev) => prev + value)
 
-        setIsPoint(false)
-        setOutput((prev) => prev + value)
-        setHistory((prev) => prev + value)
+            const newText = eval(history)
+            setOutput(eval(newText))
+            setOutput((prev) => prev + value)
+          }
+        }
+      } else {
+        setIsOp(false)
+        if (value === '.' && isPoint === false) {
+          setOutput((prev) => prev + value)
+          setHistory((prev) => prev + value)
+          setIsPoint(true)
+        } else if (value !== '.') {
+          setOutput((prev) => prev + value)
+          setHistory((prev) => prev + value)
+        }
       }
     },
-    [isPoint],
+    [isPoint, history, isOp],
   )
 
-  const calculate = useCallback(() => {
-    const final = eval(output)
+  const backSpace = useCallback(() => {
+    if (history.length > 0) {
+      const newHistory = history.slice(0, history.length - 1)
 
-    setOutput(final)
-  }, [output])
+      setHistory(newHistory)
+      setOutput(newHistory)
+    }
+  }, [history])
 
   return (
     <CalcContext.Provider
@@ -58,6 +93,8 @@ const CalcProvider = ({ children }: CalcProviderData) => {
         history,
         updateCalc,
         calculate,
+        reset,
+        backSpace,
       }}
     >
       {children}
