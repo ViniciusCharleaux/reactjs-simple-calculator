@@ -7,6 +7,9 @@ export const Index: React.FC = () => {
 
   return (
     <div className="flex bg-gray-800 h-screen w-screen items-center justify-center flex-col">
+      <h2 className="mb-4 text-gray-100 text-xl">
+        Simple calculator using TailwindCSS and ContextAPI
+      </h2>
       <div className="flex w-96 h-max text-right justify-end flex-col">
         <Screen />
         <div className="flex flex-wrap items-center">
