@@ -6,7 +6,7 @@ export const Index: React.FC = () => {
   const { updateCalc, calculate, reset, backSpace } = useCalc()
 
   return (
-    <div className="flex bg-gray-800 h-screen w-screen items-center justify-center flex-col">
+    <div className="flex bg-[#21222c] h-screen w-screen items-center justify-center flex-col">
       <h2 className="mb-4 text-gray-100 text-xl">
         Simple calculator using TailwindCSS and ContextAPI
       </h2>
